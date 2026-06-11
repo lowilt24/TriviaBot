@@ -1,4 +1,5 @@
 import random
+import json
 
 def hacer_pregunta(p):
     texto = f"[{p['categoria']}] {p['pregunta']}"
@@ -10,13 +11,8 @@ print(f"Hola {nombre}")
 
 puntaje = 0
 
-preguntas = [
-    {"pregunta": "¿Cuántos días tiene un año?", "respuesta": "365", "categoria": "ciencia"},
-    {"pregunta": "¿Cuál es la capital de Francia?", "respuesta": "paris", "categoria": "geografia"},
-    {"pregunta": "¿Cuánto es 7 x 8?", "respuesta": "56", "categoria": "matematicas"},
-    {"pregunta": "¿En qué planeta vivimos?", "respuesta": "tierra", "categoria": "ciencia"},
-    {"pregunta": "¿Cuántos continentes hay?", "respuesta": "7", "categoria": "geografia"},
-]
+with open("questions.json", encoding="utf-8") as archivo:
+    preguntas = json.load(archivo)
 
 random.shuffle(preguntas)
 
