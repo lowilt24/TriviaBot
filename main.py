@@ -1,18 +1,40 @@
 import random
-import json
+import html
+import requests
+
+def obtener_preguntas():
+
+    url = "https://opentdb.com/api.php?amount=5&type=multiple"
+    datos = requests.get(url).json()
+
+    preguntas = []
+
+    for r in datos["results"]:
+        opciones = [r["correct_answer"]] + r["incorrect_answers"]
+        random.shuffle(opciones)
+
+        preguntas.append({
+            "pregunta": html.unescape(r["question"]),
+            "categoria": html.unescape(r["category"]),
+            "opciones": [html.unescape(o) for o in opciones],
+            "respuesta": html.unescape(r["correct_answer"]),
+        })
+    
+    return preguntas
 
 def hacer_pregunta(p):
-    texto = f"[{p['categoria']}] {p['pregunta']}"
-    respuesta = input(texto + " ").strip().lower()
-    return respuesta == p["respuesta"]
+    print(f"\n[{p['categoria']}] {p['pregunta']}")
+    for i, opcion in enumerate(p["opciones"], start=1):
+        print(f"  {i}) {opcion}")
+    eleccion = input("Tu respuesta (1-4): ").strip()
+    return p["opciones"][int(eleccion) - 1] == p["respuesta"]
 
 nombre = input("¿Cómo te llamas? ")
 print(f"Hola {nombre}")
 
 puntaje = 0
 
-with open("questions.json", encoding="utf-8") as archivo:
-    preguntas = json.load(archivo)
+preguntas = obtener_preguntas()
 
 random.shuffle(preguntas)
 
