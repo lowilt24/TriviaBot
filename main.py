@@ -5,7 +5,11 @@ import requests
 def obtener_preguntas():
 
     url = "https://opentdb.com/api.php?amount=5&type=multiple"
-    datos = requests.get(url).json()
+    try:
+        datos = requests.get(url).json()
+    except(requests.RequestException):
+        print("Error: No se pudo conectar con el servidor.")
+        return []
 
     preguntas = []
 
@@ -24,10 +28,17 @@ def obtener_preguntas():
 
 def hacer_pregunta(p):
     print(f"\n[{p['categoria']}] {p['pregunta']}")
+
     for i, opcion in enumerate(p["opciones"], start=1):
-        print(f"  {i}) {opcion}")
+            print(f"  {i}) {opcion}")
+
     eleccion = input("Tu respuesta (1-4): ").strip()
-    return p["opciones"][int(eleccion) - 1] == p["respuesta"]
+
+    try:
+        return p["opciones"][int(eleccion) - 1] == p["respuesta"]
+    except(ValueError, IndexError):
+        print("Error: Seleccione un número válido")
+        return False
 
 nombre = input("¿Cómo te llamas? ")
 print(f"Hola {nombre}")
