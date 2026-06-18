@@ -7,7 +7,10 @@ def obtener_preguntas():
     url = "https://opentdb.com/api.php?amount=5&type=multiple"
     try:
         datos = requests.get(url).json()
-    except(requests.RequestException):
+        if datos["response_code"] != 0:
+            print("Error en el servidor. Intente Nuevamente.")
+            return []
+    except requests.RequestException:
         print("Error: No se pudo conectar con el servidor.")
         return []
 
